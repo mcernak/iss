@@ -18,9 +18,11 @@ autoload create-mlp-file-list.sh
 
 function Split
 {
-    create-mlp-file-list.sh $fileList file-list.txt
-    mkdir -p deal
-    dealc.sh file-list.txt deal/file-list.txt.{01..$nJobs}
+    if [[ ! -e file-list.txt ]]; then
+        create-mlp-file-list.sh $fileList file-list.txt
+        mkdir -p deal
+        dealc.sh file-list.txt deal/file-list.txt.{01..$nJobs}
+    fi
 }
 
 
@@ -58,20 +60,23 @@ function Array
         echo "Minimal number of frames: ${minFrames}"
     fi
 
-    case $mlpWeightFormat in 
-    matlab )
-        mlpSize=`basename $mlpWeightFile | sed -e "s/\.mat//g" | tr 'x' ','`
-        ;;
-    rap3 )
-        mlpSize=`basename $mlpWeightFile | sed -e "s/\.txt//g" | tr '_' ','`
-        ;;
-    *)
-        echo "Unknown weight format ($mlpWeightFormat)"
-        exit 1
-        ;;
-    esac
+    if [[ -z $mlpSize ]]
+    then
+	case $mlpWeightFormat in 
+	matlab )
+	    mlpSize=`basename $mlpWeightFile | sed -e "s/\.mat//g" | tr 'x' ','`
+	    ;;
+	rap3 )
+	    mlpSize=`basename $mlpWeightFile | sed -e "s/\.txt//g" | tr '_' ','`
+	    ;;
+	*)
+	    echo "Unknown weight format ($mlpWeightFormat)"
+	    exit 1
+	    ;;
+	esac
+    fi
 
-    logFile="$logDir/forwardMLP.log"
+    logFile="$logDir/${outMlpTag}-forwardMLP.log"
 
     opts=(
         ftr1_file=$ftrFile.$grid0Task
@@ -94,6 +99,7 @@ function Array
         ftr1_delta_order=$deltaOrder
         ftr1_delta_win=$deltaWin
     )
+    echo "$qnmultifwd $opts"
     $qnmultifwd $opts
     rm -f $ftrFile.$grid0Task
 }
@@ -125,7 +131,8 @@ then
 fi
 
 # Just to make sure feacat does not crash when the output is redirected
-exec 3>`tty`
+exec 3>tty.log
+# `tty`
 
 # Grid
 array=( $nJobs 1 )

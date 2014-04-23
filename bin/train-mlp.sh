@@ -62,10 +62,14 @@ case $mlpNLayers in
         # compute size of hidden layer
         # for 3 layers: P = (1+I)*H + (H+1)*O  => H=(P-O)/(1+I+O)
         mlpHiddenSize=`echo "($nParams-$mlpOutputSize)/(1+$mlpInputSize+$mlpOutputSize)" | bc`
-        mlpSize=$mlpInputSize,$mlpHiddenSize,$mlpOutputSize
-        outWeightFile=${mlpInputSize}x${mlpHiddenSize}x${mlpOutputSize}.mat
-        suffix=${mlpInputSize}x${mlpHiddenSize}x${mlpOutputSize}
     fi
+    mlpSize=$mlpInputSize,$mlpHiddenSize,$mlpOutputSize
+    if [[ -z $outMlpTag ]]; then
+        outWeightFile=${mlpInputSize}x${mlpHiddenSize}x${mlpOutputSize}.mat
+    else
+        outWeightFile=${outMlpTag}-${mlpInputSize}x${mlpHiddenSize}x${mlpOutputSize}.mat
+    fi
+    suffix=${mlpInputSize}x${mlpHiddenSize}x${mlpOutputSize}
     ;;
 '5')
     if [[ $mlpNLayers == 5 ]]
@@ -77,7 +81,11 @@ case $mlpNLayers in
             mlpHiddenSize=`echo "($nParams-$mlpOutputSize-$mlpBnSize)/($mlpInputSize+$mlpOutputSize+2*$mlpBnSize+2)" | bc`
         fi
         mlpSize=$mlpInputSize,$mlpHiddenSize,$mlpBnSize,$mlpHiddenSize,$mlpOutputSize
-        outWeightFile=${mlpInputSize}x${mlpHiddenSize}x${mlpBnSize}x${mlpHiddenSize}x${mlpOutputSize}.mat
+        if [[ -z $outMlpTag ]]; then
+            outWeightFile=${mlpInputSize}x${mlpHiddenSize}x${mlpBnSize}x${mlpHiddenSize}x${mlpOutputSize}.mat
+        else
+            outWeightFile=${outMlpTag}-${mlpInputSize}x${mlpHiddenSize}x${mlpBnSize}x${mlpHiddenSize}x${mlpOutputSize}.mat
+        fi
         suffix=${mlpInputSize}x${mlpHiddenSize}x${mlpBnSize}x${mlpHiddenSize}x${mlpOutputSize}
     fi
     ;;
@@ -88,9 +96,16 @@ esac
 # init-mlp.sh when creating the training and dev data files
 featTRN=`echo "$featTRN-$suffix"`
 featDEV=`echo "$featDEV-$suffix"`
+# featTRN=`echo "$featTRN-351x800x2"`
+# featDEV=`echo "$featDEV-351x800x2"`
 
 # Create hard targets
-hardTargetFile=target.pfile
+if [[ -z $outMlpTag ]]; then
+    hardTargetFile=target.pfile
+else
+    hardTargetFile=${outMlpTag}-target.pfile
+fi
+
 $pfile_concat -q -o $hardTargetFile $targetTRN $targetDEV
 ftrFile=$featsDir/$featName/$featTRN,$featsDir/$featName/$featDEV
 if [[ ! -z $featTRN2 ]] && [[ ! -z $featDEV2 ]]
@@ -113,7 +128,7 @@ trainRange="$trnBegin:$trnEnd"
 cvRange="$devBegin:$devEnd"
 
 logWeightFile="%e.wts"
-logFile="$logDir/trainMLP.log"
+logFile="$logDir/trainMLP"${outMlpTag}".log"
 
 opts=(
     ftr1_file=$ftrFile
@@ -175,6 +190,11 @@ fi
 if [ ! -z $initRandomWeightMax ]
 then
     opts+="init_random_weight_max=$initRandomWeightMax"
+fi
+
+if [ ! -z $useCUDA ]
+then
+    opts+="use_cuda=$useCUDA"
 fi
 
 $qnmultitrn $opts

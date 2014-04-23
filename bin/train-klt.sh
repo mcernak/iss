@@ -13,7 +13,7 @@ source $(dirname $0)/config.sh
 source $(dirname $0)/grid.sh
 
 # Just to make sure feacat does not crash when the output is redirected
-exec 3>`tty`
+exec 3>tty.log
 
 # train tandem (log + klt train)
 # apply log

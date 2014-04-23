@@ -276,8 +276,8 @@ feacat=${FEACAT:-$(which feacat)}
 labcat=${LABCAT:-$(which labcat)}
 trainLabels=${TRAIN_LABELS:-hmm-list.txt}
 
-targetTRN=targetTRN.pfile
-targetDEV=targetDEV.pfile
+targetTRN=${TARGET_TRN:-targetTRN.pfile}
+targetDEV=${TARGET_DEV:-targetDEV.pfile}
 targetTST=targetTST.pfile
 featTRN=${FEAT_TRN:-$featName-TRN.pfile}
 featDEV=${FEAT_DEV:-$featName-DEV.pfile}
@@ -288,6 +288,7 @@ then
     featDEV2=${FEAT_NAME2}-DEV.pfile
     featTST2=${FEAT_NAME2}-TST.pfile
 fi
+targetFeats=${TARGET_FEATURES:-1}
 
 #input
 trnList=${TRN_LIST:-trn.list}
@@ -349,7 +350,11 @@ divisionInput=${DIVISION_INPUT:-$activationFile}
 divisionOutput=${DIVISION_OUTPUT:-division-out.txt}
 divisionDim=${DIVISION_DIM:-1}
 
+outMlpTag=${MLP_TAG:-}
+useCUDA=${USE_CUDA:-"true"}
+
 #forward MLP
+mlpSize=${MLP_SIZE:-}
 activationID=${ACTIVATION_ID:-out}
 featForward=${FORWARD_FILE:-$featName-TST.pfile}
 outputType=${MLP_OUTPUT_TYPE:-softmax}
@@ -473,3 +478,7 @@ sentenceDelimiter=${SENTENCE_DELIMITER:-/J}
 reContextClustering=${RECLUSTERING:-5}
 ttsContext=${TTS_CONTEXT:-full}
 
+
+# TTS Extraction
+ee_bin=${EE_BIN:-$(which extracter)}
+eeConfig=${EE_CONFIG:-/dev/null}

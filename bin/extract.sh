@@ -121,6 +121,13 @@ function Array
         $sspExtracter -f deal/$extractList.$grid0Task
         ;;
     'tts')
+        # The e-extracter executable supplied with tracter
+        if [[ ! -f $eeConfig ]]
+        then
+            echo No ee config file $eeConfig
+            exit 1
+        fi
+        source $eeConfig
         echo Running TTS extracter
         extractor-HTS.sh deal/$extractList.$grid0Task
         ;;

@@ -12,8 +12,11 @@ this=$0
 source $(dirname $0)/config.sh
 source $(dirname $0)/grid.sh
 
+autoload create-mlp-file-list.sh
+
 # Just to make sure feacat does not crash when the output is redirected
-exec 3>`tty`
+exec 3>tty.log
+# `tty`
 
 # apply klt on training data
 # apply feature dimension reduction

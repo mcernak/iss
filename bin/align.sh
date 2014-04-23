@@ -85,17 +85,18 @@ function Split
         fi
         rm $alignList-temp
 
-        if [ ! -e $alignModelDir/$model_name ]
-        then
-            mkdir models
-            $createInitialModels delta $alignModelDir/hmm-list.txt models/
-            $createHTKHMMS models/ $alignModelDir/hmm-list.txt $alignModelDir/$model_name
-        fi
-        if [ ! -e $alignModelDir/$phonelist ]
-        then
-            cp $alignModelDir/hmm-list.txt $alignModelDir/$phonelist
-            echo "sp" >> $alignModelDir/$phonelist
-        fi
+        # use create-hybrid-model.sh instead
+        # if [ ! -e $alignModelDir/$model_name ]
+        # then
+        #     mkdir models
+        #     $createInitialModels delta $alignModelDir/hmm-list.txt models/
+        #     $createHTKHMMS models/ $alignModelDir/hmm-list.txt $alignModelDir/$model_name
+        # fi
+        # if [ ! -e $alignModelDir/$phonelist ]
+        # then
+        #     cp $alignModelDir/hmm-list.txt $alignModelDir/$phonelist
+        #     echo "sp" >> $alignModelDir/$phonelist
+        # fi
         ;;
     *)
         echo "Decoder $decoder cannot be used to align"
@@ -147,7 +148,7 @@ function Array
             $htsOptions $alignOptions
             -a
             -o SW
-            -H $alignModelDir/$model_name
+            -H $alignModelDir/$alignModel
             -I $alignWordMLF
             -m
             -y lab
@@ -163,7 +164,8 @@ function Array
 
         case $decoder in
         HVite_kl)
-            $hvite_kl $opts $mainDict $alignModelDir/$phonelist
+            # $hvite_kl $opts $mainDict $alignModelDir/$phonelist
+            $hvite_kl $opts $mainDict $alignModelDir/hmm-list.txt
             ;;
         HVite_rkl)
             $hvite_rkl $opts $mainDict $alignModelDir/$phonelist

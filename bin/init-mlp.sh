@@ -36,10 +36,10 @@ then
     create-phone-list.sh $trainLabels
 fi
 
-# generate random file of any size (100k here) as seed
+# generate random file of any size (200k here) as seed
 if [[ ! -f $seed ]]
 then
-    dd if=/dev/urandom of=$seed bs=100k count=1
+    dd if=/dev/urandom of=$seed bs=200k count=1
 fi
 
 echo Creating training and development list
@@ -115,9 +115,9 @@ case $mlpNLayers in
         # compute size of hidden layer
         # for 3 layers: P = (1+I)*H + (H+1)*O  => H=(P-O)/(1+I+O)
         mlpHiddenSize=`echo "($nParams-$mlpOutputSize)/(1+$mlpInputSize+$mlpOutputSize)" | bc`
-        mlpSize=$mlpInputSize,$mlpHiddenSize,$mlpOutputSize
-        suffix=${mlpInputSize}x${mlpHiddenSize}x${mlpOutputSize}
     fi
+    mlpSize=$mlpInputSize,$mlpHiddenSize,$mlpOutputSize
+    suffix=${mlpInputSize}x${mlpHiddenSize}x${mlpOutputSize}
     ;;
 '5')
     if [[ $mlpNLayers == 5 ]]
@@ -135,8 +135,11 @@ case $mlpNLayers in
     ;;
 esac
 
-echo Creating feature pfiles...
-$feacat -ip htk -l trn-list-htk.txt -o $featsDir/$featName/$featTRN-$suffix -dt pfile -dl $targetTRN 
-echo -n TRN done...
-$feacat -ip htk -l dev-list-htk.txt -o $featsDir/$featName/$featDEV-$suffix -dt pfile -dl $targetDEV
-echo DEV done.
+if [[ $targetFeats == 1 ]]
+then
+    echo Creating feature pfiles...
+    $feacat -ip htk -l trn-list-htk.txt -o $featsDir/$featName/$featTRN-$suffix -dt pfile -dl $targetTRN 
+    echo -n TRN done...
+    $feacat -ip htk -l dev-list-htk.txt -o $featsDir/$featName/$featDEV-$suffix -dt pfile -dl $targetDEV
+    echo DEV done.
+fi
