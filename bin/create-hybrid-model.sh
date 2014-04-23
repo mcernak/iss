@@ -5,8 +5,8 @@
 # See the file COPYING for the licence associated with this software.
 #
 # Author(s):
+#   Mathew Doss,  April 2014
 #   Milos Cernak, April 2014
-#                 based on Mathew's scripts
 #
 this=$0
 source $(dirname $0)/config.sh

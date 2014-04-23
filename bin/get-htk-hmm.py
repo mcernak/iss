@@ -5,6 +5,7 @@
 # See the file COPYING for the licence associated with this software.
 #
 # Author(s):
+#   Mathew Doss,  April 2014
 #   Milos Cernak, April 2014
 #
 
