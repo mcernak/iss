@@ -19,16 +19,16 @@ exec 3> tty.log
 mlpSizeName=$mlpWeightFile:t:r
 activationFile=$activationID-$mlpSizeName.pfile
 
-if [[ ! -e $featsDir/$featName ]]
-then
-    mkdir -p $featsDir/$featName
-fi
-
 echo "Generating htk features from $activationFile"
 if [[ -e $activationFile ]]
 then
     create-mlp-file-list.sh $fileList prob-list.txt
 
+    cat prob-list.txt \
+        | cut -d' ' -f2  | xargs -n 1 dirname \
+        | sort -u | xargs -n 1 mkdir -p
+
     $feacat -ipf pfile -opf htk -pad 4 -i $activationFile -olist prob-list.txt
+    rm -f $activationFile
 fi
 

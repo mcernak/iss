@@ -80,6 +80,7 @@ while ( $current_ID = <F> )
     chomp $current_ID;
     $frame_id = 0;
     $current_ID.=$extn;
+    # print "$current_ID";
     foreach $line (@{$mlf{$current_ID}})
     {
         chomp $line ;
@@ -97,6 +98,7 @@ while ( $current_ID = <F> )
 
         for ($ii = $tbeg_ind ; $ii < $tend_ind ; $ii ++)
         {
+	    # print "$sent_id $frame_id $phn_id\n" ;
             print G "$sent_id $frame_id $phn_id\n" ;
             $frame_id ++ ;
         }

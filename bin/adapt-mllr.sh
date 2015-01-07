@@ -107,6 +107,12 @@ function Split
     '%%%/*')
         cat $adaptList | cut -c1-3 | sort -u > $adaptListSpk
         ;;
+    '%%%*')
+        cat $adaptList | cut -c1-3 | sort -u > $adaptListSpk
+        ;;
+    'merge')
+        echo 'ENV' > $adaptListSpk
+        ;;
     *)
         cat $adaptList | awk '{ fname=system("basename " $1) }' | cut -c1-3 | sort -u > $adaptListSpk
         ;;
@@ -122,8 +128,11 @@ function Split
             '%%%/*')
                 grep "$spk/" $adaptList >> deal/$adaptList.$i
                 ;;
+            'merge')
+                cat $adaptList >> deal/$adaptList.$i
+                ;;
             *)
-                grep "^$spk" $adaptList >> deal/$adaptList.$i
+                grep "$spk" $adaptList >> deal/$adaptList.$i
                 ;;
             esac
         done

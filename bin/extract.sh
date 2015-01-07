@@ -109,9 +109,11 @@ function Array
             echo No tracter config file $extracterConfig
             exit 1
         fi
+        echo source $extracterConfig
         source $extracterConfig
-        # export ASRFactory_Source=SndFile
+        export ASRFactory_Source=SndFile
         echo Running $extracter
+        echo $extracter -f deal/$extractList.$grid0Task
         $extracter -f deal/$extractList.$grid0Task
         ;;
     'ssp')

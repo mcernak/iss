@@ -3,7 +3,7 @@
 # Convert Dictionary
 # David Imseng, November 2010
 #
-import csv, sys, logging 
+import csv, sys, logging
 from optparse import OptionParser
 
 from copy import copy
@@ -50,7 +50,7 @@ parser.add_option("-m", "--mapping", dest="map", help='Use the specified mapping
 
 (options, args) = parser.parse_args()
 
-if(options.lexicon): 
+if(options.lexicon):
 	logger.info('Lexicon set to {}.'.format(options.lexicon))
 	lexicon=options.lexicon
 else:
@@ -92,6 +92,7 @@ print('"<s>"\t[]\tsil')
 
 try:
 	for row in freader:
+		# print('"{}"'.format(row['trans']))
 		all_phones=row['trans'].split(' ')
 		for phone in all_phones:
 			for to_map in map.keys():
@@ -101,4 +102,3 @@ try:
 		print('"{}"\t[{}]\t{}'.format(row['words'],row['words'],' '.join(all_phones)))
 except csv.Error as e:
 	sys.exit('file %s, line %d: %s' % (filename, freader.line_num, e))
-

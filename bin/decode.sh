@@ -58,8 +58,8 @@ EOF
 function Split
 {
     # Build a file list
-    rm -f $decodeList
-    create-file-list.sh $decodeList
+    # rm -f $decodeList
+    # create-file-list.sh $decodeList
 
     case $decoder in
     HVite)

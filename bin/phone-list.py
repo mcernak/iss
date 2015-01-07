@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 #
 # Copyright 2010 by Idiap Research Institute, http://www.idiap.ch
 #
@@ -10,7 +10,7 @@
 #
 # Extract Phonelist from csv datafile
 #
-import csv, sys, logging 
+import csv, sys, logging
 from optparse import OptionParser
 
 from copy import copy
@@ -58,13 +58,13 @@ parser.add_option("-m", "--mapping", dest="map", help='Use the specified mapping
 
 (options, args) = parser.parse_args()
 
-if(options.datafile): 
+if(options.datafile):
 	logger.info('CSV filename set to {}.'.format(options.datafile))
 	filename=options.datafile
 else:
 	parser.error("The data file needs to be specified.")
 
-if(options.phoneID): 
+if(options.phoneID):
 	logger.info('Phone ID set to {}.'.format(options.phoneID))
 	phoneID=options.phoneID
 else:
@@ -93,7 +93,7 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 
-
+# print('{}'.format(phoneID))
 #read the csv file
 freader = csv.DictReader(open(filename,'r'))
 
@@ -126,4 +126,3 @@ except csv.Error as e:
 
 if( nphones != 0 ):
 	sys.exit('Not all phonemes read. (%s missing)' % (nphones))
-

@@ -30,6 +30,7 @@ if [ ! -z $sampaMap ]; then
     -l 'error' \
     > ${2}.unsorted
 else
+    echo "$binDir/convert-dict.py -i ${1} -l 'error' > ${2}.unsorted"
     $binDir/convert-dict.py \
         -i ${1} \
         -l 'error' \

@@ -77,6 +77,7 @@ function tie()
                 -m $sampaMap \
                 -t $1
         else
+            echo "$parsePhoneSet -i $phoneSetCSV -p $phoneSet -f $questions -s $silModel -m $sampaMap -t $1"
             $parsePhoneSet \
                 -i $phoneSetCSV \
                 -p $phoneSet \
@@ -96,6 +97,7 @@ function tie()
                 -s $silModel \
                 -t $1
         else
+            echo "$parsePhoneSet -i $phoneSetCSV -p $phoneSet -f $questions -s $silModel -t $1"
             $parsePhoneSet \
                 -i $phoneSetCSV \
                 -p $phoneSet \

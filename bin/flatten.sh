@@ -67,6 +67,7 @@ fi
 
 # First find all the directories
 tmpDir=/dev/shm/flatten$$
+tmpDir=/idiap/temp/mcernak/coralromTEMP$$
 mkdir $tmpDir
 dirs=$(cd $sourceDir; ls)
 for dir in $dirs
@@ -80,6 +81,7 @@ sort $tmpDir/* | uniq -c | sed 's/^ *//' \
     | while read freq
 do
     count=$(echo $freq | cut -d' ' -f1)
+    echo "Count $count, freq $freq"
     if [[ $count != 1 ]]
     then
         p=$(echo $freq | cut -d' ' -f2 | sed 's/^\.\///')
@@ -87,10 +89,12 @@ do
         then
             p=$(echo $p | tr '[:upper:]' '[:lower:]')
         fi
+        echo "Creating $targetDir/$p"
         mkdir -p $targetDir/$p
     fi
 done
 
+exit
 # Now find all directories and files
 echo Searching $sourceDir
 files=$(cd $sourceDir; find -L .)

@@ -60,6 +60,7 @@ opts=(
     -wordInsPen $wfstWordPenalty
     -unkWord $unknownWord
 )
+echo $gramgen $opts
 $gramgen $opts
 
 echo lexgen
@@ -78,6 +79,7 @@ opts=(
 )
 #    -addPronunsWithEndSil
 #    -addPronunsWithEndPause
+echo $lexgen $opts
 $lexgen $opts
 
 # Prepare the grammar transducer

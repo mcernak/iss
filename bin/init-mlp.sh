@@ -75,9 +75,9 @@ esac
 echo Creating target pfiles...
 mlf-to-pfile-tri.pl $trnMLF $trainLabels trn-list-shuf.txt $targetTRN
 echo TRN done...
+# echo mlf-to-pfile-tri.pl $devMLF $trainLabels dev-list-shuf.txt $targetDEV
 mlf-to-pfile-tri.pl $devMLF $trainLabels dev-list-shuf.txt $targetDEV
 echo DEV done.
-
 
 # compute the mlpSize to use as suffix for the training and dev files
 # offset due to the window span

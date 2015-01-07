@@ -22,6 +22,8 @@ while arg = ARGV.shift
   case arg
   when "-d"
     deleteNoises = true
+  when "-k"
+    keepCase = true
   when "-w"
     wordFile = ARGV.shift
   when "-c"
@@ -48,8 +50,12 @@ dotFile.each do |name|
       label = $1
 
       # Print the lab (MLF) format
-      printf "\"*/%s.%s\"\n", label.downcase, ext
-      line.upcase.split(' ').each do |w|
+      if not keepCase
+        line = line.upcase
+        label = label.downcase
+      end
+      printf "\"*/%s.%s\"\n", label, ext
+      line.split(' ').each do |w|
 
         # Noises are special
         if deleteNoises

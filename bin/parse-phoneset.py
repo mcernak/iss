@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 #
 # Copyright 2010 by Idiap Research Institute, http://www.idiap.ch
 #
@@ -9,7 +9,7 @@
 # Parse Phoneset file in csv format and create question sets
 # David Imseng, July 2010
 #
-import csv, sys, logging 
+import csv, sys, logging
 from optparse import OptionParser
 
 from copy import copy
@@ -50,11 +50,11 @@ sp_match=3
 
 #FRENCH
 #ps='SD_SF'
-#map={'2':'_2_','9':'_9_','9~':'_9_~','&/':'_2___9_','E/':'e_E','O/':'o_O'} 
+#map={'2':'_2_','9':'_9_','9~':'_9_~','&/':'_2___9_','E/':'e_E','O/':'o_O'}
 
 #ENGLISH
 #ps='SD_EN'
-#map={'3:':'_3_:'} 
+#map={'3:':'_3_:'}
 
 #GERMAN
 #map={'2:6':'_2_:6','96':'_9_6', '9':'_9_', '2:':'_2_:','?':'_?_'}
@@ -100,7 +100,7 @@ parser.add_option("-t", "--treeth", dest="treeth", help='The maximum increase of
 if (options.treeth):
 	TREETH=options.treeth
 
-if(options.cluster_filename): 
+if(options.cluster_filename):
 	logger.info('cluster.template filename set to {}.'.format(options.cluster_filename))
 	qsOutName=options.cluster_filename
 	qsOut=open(qsOutName,'w')
@@ -109,7 +109,7 @@ else:
 	qsOutName="stdout"
 	logger.info('No filename set for the cluster.template file. Printing to stdout...')
 
-if(options.config_filename): 
+if(options.config_filename):
 	logger.info('mktri.hed filename set to {}.'.format(options.config_filename))
 	tiConfigName=options.config_filename
 	tiConfig=open(tiConfigName,'w')
@@ -205,9 +205,12 @@ for question in freader.fieldnames[scolumn:]:
 		l_sel_phonemes = {'"'+str(x)+'-*"' for x in sel_phonemes}
 		c_sel_phonemes = {'"*-'+str(x)+'+*"' for x in sel_phonemes}
 
-		print('QS "{}_{}"\t{{ {} }}'.format('R',question,','.join(r_sel_phonemes)), file=qsOut)
-		print('QS "{}_{}"\t{{ {} }}'.format('L',question,','.join(l_sel_phonemes)), file=qsOut)
-		print('QS "{}_{}"\t{{ {} }}'.format('C',question,','.join(c_sel_phonemes)), file=qsOut)
+		qsOut.write( 'QS "{}_{}"\t{{ {} }}\n'.format('R',question,','.join(r_sel_phonemes)))
+		# print('QS "{}_{}"\t{{ {} }}'.format('R',question,','.join(r_sel_phonemes)), file=qsOut)
+		qsOut.write('QS "{}_{}"\t{{ {} }}\n'.format('L',question,','.join(l_sel_phonemes)))
+		qsOut.write('QS "{}_{}"\t{{ {} }}\n'.format('C',question,','.join(c_sel_phonemes)))
+		# print('QS "{}_{}"\t{{ {} }}'.format('L',question,','.join(l_sel_phonemes)), file=qsOut)
+		# print('QS "{}_{}"\t{{ {} }}'.format('C',question,','.join(c_sel_phonemes)), file=qsOut)
 
 
 for x in data:
@@ -216,18 +219,24 @@ for x in data:
 		for to_map in map.keys():
 			if (to_map == phoneme):
 				phoneme = {map[phoneme]}
-		print('QS "{}_{}"\t{{ {} }}'.format('R',''.join(phoneme), '"*+'+''.join(phoneme)+'"'), file=qsOut)
-		print('QS "{}_{}"\t{{ {} }}'.format('L',''.join(phoneme), '"'+''.join(phoneme)+'-*"'),file=qsOut)
-		print('QS "{}_{}"\t{{ {} }}'.format('C',''.join(phoneme), '"*-'+''.join(phoneme)+'+*"'),file=qsOut)
+		qsOut.write('QS "{}_{}"\t{{ {} }}\n'.format('R',''.join(phoneme), '"*+'+''.join(phoneme)+'"'))
+		qsOut.write('QS "{}_{}"\t{{ {} }}\n'.format('L',''.join(phoneme), '"'+''.join(phoneme)+'-*"'))
+		qsOut.write('QS "{}_{}"\t{{ {} }}\n'.format('C',''.join(phoneme), '"*-'+''.join(phoneme)+'+*"'))
+        # print('QS "{}_{}"\t{{ {} }}'.format('R',''.join(phoneme), '"*+'+''.join(phoneme)+'"'), file=qsOut)
+		# print('QS "{}_{}"\t{{ {} }}'.format('L',''.join(phoneme), '"'+''.join(phoneme)+'-*"'),file=qsOut)
+		# print('QS "{}_{}"\t{{ {} }}'.format('C',''.join(phoneme), '"*-'+''.join(phoneme)+'+*"'),file=qsOut)
 
 if sil:
 	for x in sil:
-		print('QS "{}_{}"\t{{ {} }}'.format('R',x, '"*+'+x+'"'), file=qsOut)
-		print('QS "{}_{}"\t{{ {} }}'.format('L',x, '"'+x+'-*"'), file=qsOut)
+		qsOut.write('QS "{}_{}"\t{{ {} }}\n'.format('R',x, '"*+'+x+'"'))
+		qsOut.write('QS "{}_{}"\t{{ {} }}\n'.format('L',x, '"'+x+'-*"'))
+		# print('QS "{}_{}"\t{{ {} }}'.format('R',x, '"*+'+x+'"'), file=qsOut)
+		# print('QS "{}_{}"\t{{ {} }}'.format('L',x, '"'+x+'-*"'), file=qsOut)
 
 logger.info('Questions written to file "{}".'.format(str(qsOutName)))
 
-print('TR 2', file=qsOut)
+qsOut.write('TR 2\n')
+# print('TR 2', file=qsOut)
 for x in data:
 	phoneme = x[ps]
 	if (len(phoneme) > 0):
@@ -238,9 +247,11 @@ for x in data:
 		for state in states:
 			phonID=''.join(phoneme)
 			phoVar={'"'+phonID+'"','"*-'+phonID+'+*"','"*-'+phonID+'"','"'+phonID+'+*"'}
-			print('TB {} "ST_{}_{}"\t{{({}).state[{}]}}'.format(str(TREETH),''.join(phoneme), state, ','.join(phoVar),state), file=qsOut)
+			qsOut.write('TB {} "ST_{}_{}"\t{{({}).state[{}]}}\n'.format(str(TREETH),''.join(phoneme), state, ','.join(phoVar),state))
+			# print('TB {} "ST_{}_{}"\t{{({}).state[{}]}}'.format(str(TREETH),''.join(phoneme), state, ','.join(phoVar),state), file=qsOut)
 		if tiConfig:
-			print('TI T_{} {{({}).transP}}'.format(''.join(phoneme), ','.join(phoVar)), file=tiConfig)
+			# print('TI T_{} {{({}).transP}}'.format(''.join(phoneme), ','.join(phoVar)), file=tiConfig)
+			tiConfig.write('TI T_{} {{({}).transP}}\n'.format(''.join(phoneme), ','.join(phoVar)))
 
 ## PNG - we don't need to tie sil as it's monophone
 ## if sil:

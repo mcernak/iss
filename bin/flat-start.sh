@@ -64,12 +64,16 @@ if [[ $gridMode == serial ]] || [[ $gridMode == split ]]
 then
 
     # Build a file list
+    # [[ ! -e $trainList ]] && create-file-list.sh $trainList
+
     if [[ ! -e $trainList ]]
     then
         echo Generating $trainList
-        while read ID file 
+        # while read ID file 
+        while read file 
         do
-            feats=$ID"="$featsDir/$featName/$file".htk"
+            # feats=$ID"="$featsDir/$featName/$file".htk"
+            feats=$featsDir/$featName/$file".htk"
             echo $feats >> $trainList
         done < $fileList
     fi

@@ -27,6 +27,7 @@ then
         -m $sampaMap \
         >> $1
 else
+    # echo "$binDir/phone-list.py -d $phoneSetCSV -i $phoneSet -l error  >> $1"
     $binDir/phone-list.py -d $phoneSetCSV -i $phoneSet -l error  >> $1
 fi
 
